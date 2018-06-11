@@ -1,0 +1,11 @@
+var exp = require('express');
+var app = exp();
+var Usuario = require('../models/usuario');
+var userCtrllr = require('../controllers/usuario');
+var mdAuth = require('../middlewares/auth');
+app.get('/', mdAuth.verify_token, userCtrllr.list_all_users);
+app.get('/:id', mdAuth.verify_token, userCtrllr.get_userByID);
+app.post('/', mdAuth.verify_token, userCtrllr.create_user);
+app.put('/:id', mdAuth.verify_token, userCtrllr.update_user);
+app.delete('/:id', mdAuth.verify_token, userCtrllr.delete_user);
+module.exports = app;
