@@ -2,6 +2,7 @@
 var exp = require('express');
 var mgse = require('mongoose');
 var bdp = require('body-parser');
+var serveIndex = require('serve-index')
 
 var app = exp();
 // body parser section
@@ -9,9 +10,10 @@ app.use(bdp.urlencoded({ extended: false }));
 app.use(bdp.json());
 // inicializar variables
 
-var appRoutes = require('./routes/app');
-var userRoutes = require('./routes/usuario');
-var loginRoutes = require('./routes/login');
+// server index config
+var serveIndex = require('serve-index');
+app.use(exp.static(__dirname + '/'))
+app.use('/uploads', serveIndex(__dirname + '/uploads'));
 
 mgse.connection.openUri('mongodb://localhost:27017/HospitalDB',
     (err, res) => {
@@ -22,9 +24,7 @@ mgse.connection.openUri('mongodb://localhost:27017/HospitalDB',
         }
     });
 // rutas
-app.use('/user', userRoutes);
-app.use('/login', loginRoutes);
-app.use('/', appRoutes);
+app.use(require('./routes/index'));
 
 //escuchar peticiones
 app.listen(3000, () => {

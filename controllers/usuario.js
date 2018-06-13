@@ -10,9 +10,9 @@ exports.list_all_users = (req, res) => {
     Usuario.find({})
         .skip(desde)
         .limit(limite)
-        .exec((err, user) => err ?
+        .exec((err, users) => err ?
             aux.errorResp(res, err) :
-            aux.validRespond(res, user));
+            aux.pagination(res, users, Usuario));
 };
 // ======================
 // OBTENER Usuario=======
@@ -53,5 +53,5 @@ exports.delete_user = (req, res) => {
             err ?
                 aux.errorResp(res, err) :
                 aux.validRespond(res, user);
-        })
-}
+        });
+};

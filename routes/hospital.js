@@ -1,0 +1,11 @@
+var exp = require('express');
+var app = exp();
+var med = require('../models/hospital');
+var hpCtrllr = require('../controllers/hospital');
+var mdAuth = require('../middlewares/auth');
+app.get('/', hpCtrllr.list_all_hps);
+app.get('/:id', hpCtrllr.get_hpByID);
+app.post('/', mdAuth.verify_token, hpCtrllr.create_hp);
+app.put('/:id', mdAuth.verify_token, hpCtrllr.update_hp);
+app.delete('/:id', mdAuth.verify_token, hpCtrllr.delete_hp);
+module.exports = app;

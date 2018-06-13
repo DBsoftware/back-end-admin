@@ -7,36 +7,67 @@ exports.errorResp = (r, err, cod = 400, msn = "Error en el procedimiento") => {
 }
 
 exports.coolResp = (r, cod = 200, msn = "Procedimiento realizado con exito") => {
-    return r.status(cod).json({
-        ok: true,
-        msn
-    });
+    return r.status(cod)
+        .json({
+            ok: true,
+            msn
+        });
 }
 
-exports.validRespond = (r, user) => {
-    if (!user) {
+exports.validRespond = (r, aux) => {
+    if (!aux) {
         return r.status(400).json({
             ok: false,
             err: {
-                message: 'usuario no encontrado'
+                message: 'registro no encontrado'
             }
         });
     } else {
-        user.password = '';
-        if (user instanceof Array)
-            user.forEach(e => e.password = "");
+        if (aux.password) {
+            aux = modifyPass(aux);
+        }
         r.json({
             ok: true,
-            user
+            aux
         });
 
     }
 };
-exports.rightLoginRespond = (r, user) => {
-    user.password = '';
+
+exports.rightLoginRespond = (r, aux) => {
+    aux.password = '';
     r.json({
         ok: true,
-        user,
-        token: user.token
+        aux,
+        token: aux.token
     });
 };
+
+modifyPass = (aux) => {
+    aux.password = '';
+    if (aux instanceof Array)
+        aux.forEach(e => e.password = "");
+    return aux;
+};
+
+exports.pagination = (r, aux, model) => {
+    if (!aux) {
+        return r.status(400).json({
+            ok: false,
+            err: {
+                message: 'registro no encontrado'
+            }
+        });
+    } else {
+        if (aux.password) {
+            aux = modifyPass(aux);
+        }
+        model.count({}, (err, c) => {
+            r.json({
+                ok: true,
+                total: c,
+                aux
+            });
+        })
+    }
+}
