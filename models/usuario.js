@@ -10,7 +10,8 @@ var userSch = new Sch({
     'email': { type: String, unique: true, require: [true, 'El nombre es necesario'] },
     'password': { type: String, required: [true, 'El nombre es necesario'] },
     'img': { type: String, required: [false] },
-    'role': { type: String, required: [true], default: 'USER_ROLE', enum: rolesValidos }
+    'role': { type: String, required: [true], default: 'USER_ROLE', enum: rolesValidos },
+    'google': { type: Boolean, default: false }
 });
 
 userSch.plugin(muV, { message: 'El {PATH} debe de ser unico' });

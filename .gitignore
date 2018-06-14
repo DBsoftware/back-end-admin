@@ -2,7 +2,10 @@
 
 # Created by https://www.gitignore.io/api/macos,visualstudiocode,node
 
-uploads
+uploads/hospitales
+uploads/medicos/
+uploads/usuarios/
+google-signin/node_modules/
 ### macOS ###
 *.DS_Store
 .AppleDouble

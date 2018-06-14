@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Google sign in demo</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-signin-client_id" content="206058962974-1ctnbh90anmsvt9mrg7dht1c5p6eajuu.apps.googleusercontent.com">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="row my-5">
+            <div class="col">
+                <div class="g-signin2" data-onsuccess="onSignIn"></div>
+                <a href="#" onclick="signOut();">Sign out</a>
+                <script>
+                    function signOut() {
+                        var auth2 = gapi.auth2.getAuthInstance();
+                        auth2.signOut().then(function() {
+                            console.log('User signed out.');
+                        });
+                    }
+                </script>
+            </div>
+            <p id="here"></p>
+
+        </div>
+    </div>
+    <!-- Optional JavaScript -->
+
+    <script>
+        function onSignIn(googleUser) {
+            console.log('this is something');
+            var profile = googleUser.getBasicProfile();
+            console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            console.log('Name: ' + profile.getName());
+            console.log('Image URL: ' + profile.getImageUrl());
+            console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+            var id_token = googleUser.getAuthResponse().id_token;
+            console.log("id_token ", id_token);
+            document.getElementById('here').innerHTML = id_token;
+
+        }
+    </script>
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+
+</html>
