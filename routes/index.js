@@ -2,7 +2,7 @@ const express = require('express');
 
 const app = express();
 
-app.use('/user', require('./usuario'));
+app.use('/usuarios', require('./usuario'));
 app.use('/hospital', require('./hospital'));
 app.use('/medico', require('./medico'));
 app.use('/login', require('./login'));

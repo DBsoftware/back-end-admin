@@ -3,9 +3,12 @@ var exp = require('express');
 var mgse = require('mongoose');
 var bdp = require('body-parser');
 var serveIndex = require('serve-index')
+var cors = require('cors');
 
 var app = exp();
-// body parser section
+
+app.use(cors())
+    // body parser section
 app.use(bdp.urlencoded({ extended: false }));
 app.use(bdp.json());
 // inicializar variables
