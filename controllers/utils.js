@@ -59,8 +59,10 @@ exports.pagination = (r, aux, model) => {
             }
         });
     } else {
-        if (aux.password) {
-            aux = modifyPass(aux);
+        if (aux.length > 0) {
+            if (aux[0].password) {
+                aux = modifyPass(aux);
+            }
         }
         model.count({}, (err, c) => {
             r.json({

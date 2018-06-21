@@ -66,7 +66,7 @@ buscarMedicos = (param) => {
 }
 buscarUsuarios = (param) => {
     return new Promise((resolve, reject) => {
-        u.find({}, 'nombre email role')
+        u.find({}, 'nombre email role img _id')
             .or([{ 'nombre': param }, { 'email': param }])
             .exec((err, objR) => {
                 (err) ?

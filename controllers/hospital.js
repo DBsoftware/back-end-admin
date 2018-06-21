@@ -19,14 +19,17 @@ exports.list_all_hps = (req, res) => {
 // OBTENER hp=======
 // ======================
 exports.get_hpByID = (req, res) => {
-        hp.findOne({ '_id': req.params.id }, {}, { sort: { 'fecha': -1 } },
+    hp.findById(req.params.id)
+        .populate('usuario', 'nombre img email')
+        .exec(
             (err, hpDb) => err ?
             aux.errorResp(res, err) :
-            aux.validRespond(res, hpDb))
-    }
-    //  ======================
-    //  CREAR hp=========
-    //  ======================
+            aux.validRespond(res, hpDb)
+        );
+};
+//  ======================
+//  CREAR hp=========
+//  ======================
 exports.create_hp = (req, res) => {
         req.body.usuario = req.authUser._id;
         new hp(req.body).save(

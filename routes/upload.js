@@ -13,23 +13,24 @@ app.put('/:tipo/:id', (req, res) => {
     // req.params.tipo y req.params.id
     if (['medicos', 'usuarios', 'hospitales'].indexOf(req.params.tipo) < 0)
         aux.errorResp(res, { err: { message: 'Tipo equivocadp' } }, 400, 'tipo seleccionado erroneo');
-    if (!req.files)
+    else if (!req.files)
         aux.errorResp(res, { err: { message: 'No selecciono nada' } }, 400, 'Debe seleccionar una imagen');
+    else {
+        var arch = req.files.img;
+        var ext = arch.name.split('.').slice(-1)[0];
 
-    var arch = req.files.img;
-    var ext = arch.name.split('.').slice(-1)[0];
+        if (['png', 'jpg', 'gif', 'jpeg'].indexOf(ext) < 0) {
+            aux.errorResp(res, { err: { message: 'Tipo de imagen no permitida' } }, 400,
+                `los tipos de imagen permitidos son ${['png', 'jpg', 'gif', 'jpeg'].join(' ')}`);
+        } else {
+            var name = `${req.params.id}-${new Date().getMilliseconds()}.${ext}`
+            var path = `./uploads/${req.params.tipo}/${name}`;
+            arch.mv(path, err => {
+                err ? aux.errorResp(res, { err: { message: 'No se pudo cargar' } }, 500, 'No se ha podido cargar la imagen') :
+                    subirPorTipo(req.params.tipo, req.params.id, name, res);
+            });
 
-    if (['png', 'jpg', 'gif', 'jpeg'].indexOf(ext) < 0) {
-        aux.errorResp(res, { err: { message: 'Tipo de imagen no permitida' } }, 400,
-            `los tipos de imagen permitidos son ${['png', 'jpg', 'gif', 'jpeg'].join(' ')}`);
-    } else {
-        var name = `${req.params.id}-${new Date().getMilliseconds()}.${ext}`
-        var path = `./uploads/${req.params.tipo}/${name}`;
-        arch.mv(path, err => {
-            err ? aux.errorResp(res, { err: { message: 'No se pudo cargar' } }, 500, 'No se ha podido cargar la imagen') :
-                subirPorTipo(req.params.tipo, req.params.id, name, res);
-        });
-
+        }
     }
 });
 
