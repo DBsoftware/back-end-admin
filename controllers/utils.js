@@ -34,12 +34,13 @@ exports.validRespond = (r, aux) => {
     }
 };
 
-exports.rightLoginRespond = (r, aux) => {
+exports.rightLoginRespond = (r, aux, menu) => {
     aux.password = '';
     r.json({
         ok: true,
         aux,
-        token: aux.token
+        token: aux.token,
+        menu
     });
 };
 

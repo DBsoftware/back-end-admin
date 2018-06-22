@@ -6,6 +6,6 @@ var mdAuth = require('../middlewares/auth');
 app.get('/', userCtrllr.list_all_users);
 app.get('/:id', userCtrllr.get_userByID);
 app.post('/', userCtrllr.create_user);
-app.put('/:id', mdAuth.verify_token, userCtrllr.update_user);
-app.delete('/:id', mdAuth.verify_token, userCtrllr.delete_user);
+app.put('/:id', [mdAuth.verify_token, mdAuth.verify_role], userCtrllr.update_user);
+app.delete('/:id', [mdAuth.verify_token, mdAuth.verify_role], userCtrllr.delete_user);
 module.exports = app;

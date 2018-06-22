@@ -12,3 +12,12 @@ exports.verify_token = (req, res, next) => {
         err || error ? aux.errorResp(res, err, 401, "Token incorrecto") : next();
     });
 };
+// ===========================================
+// Verificar ROLE u que se el mismo Usuario
+// ===========================================
+exports.verify_role = (req, res, next) => {
+    var usuario = req.authUser;
+    (usuario.role === 'ADMIN_ROLE' || usuario._id === req.params.id) ?
+    next():
+        aux.errorResp(res, { err: { message: 'Procedimiento erroneo' } }, 401, "Token incorrecto");
+};

@@ -43,7 +43,7 @@ exports.search_all = (req, res) => {
 
 buscarHospitales = (param) => {
     return new Promise((resolve, reject) => {
-        h.find({ 'nombre': param })
+        h.find({ 'nombre': param }, 'nombre img usuario')
             .populate('usuario', 'nombre email')
             .exec((err, objR) => {
                 (err) ?
@@ -54,7 +54,7 @@ buscarHospitales = (param) => {
 }
 buscarMedicos = (param) => {
     return new Promise((resolve, reject) => {
-        m.find({ 'nombre': param })
+        m.find({ 'nombre': param }, 'nombre img usuario hospital')
             .populate('usuario', 'nombre email')
             .populate('hospital', 'nombre')
             .exec((err, objR) => {

@@ -30,8 +30,8 @@ async function verify(token) {
 }
 
 tokenStuff = function(res, u) {
-    u['token'] = jwt.sign({ usuario: u }, conf.SEED, { expiresIn: 4500 });
-    aux.rightLoginRespond(res, u);
+    u.token = jwt.sign({ usuario: u }, conf.SEED, { expiresIn: 4500 });
+    aux.rightLoginRespond(res, u, obtenerMenu(u.role));
 }
 
 exports.loginCtrler = (req, res) => {
@@ -39,10 +39,10 @@ exports.loginCtrler = (req, res) => {
         if (err)
             aux.errorResp(res, err, 500);
         (!uDB) ?
-        aux.errorResp(res, err, 500, "usuario no encontrado"):
+        aux.errorResp(res, err, 404, "usuario no encontrado"):
             ((!bcrypt.compareSync(req.body.password, uDB.password)) ?
-                aux.errorResp(res, err, 500, "password incorrecto") :
-                tokenStuff(res, uDB))
+                aux.errorResp(res, err, 404, "password incorrecto") :
+                tokenStuff(res, uDB));
     });
 };
 
@@ -56,10 +56,6 @@ exports.googleCtrler = async(req, res) => {
                     tokenStuff(res, oDB)) :
                 newGUser(res, gUser));
     });
-    //     res.status(200).json({
-    //     ok: true,
-    //     gUser
-    // });
 }
 
 newGUser = (res, gUser) => {
@@ -68,5 +64,31 @@ newGUser = (res, gUser) => {
         e ? aux.errorResp(res, e, 403, "Error creando usuario") :
             tokenStuff(res, oDB);
     });
+}
 
+obtenerMenu = (ROLE) => {
+    menu = [{
+            titulo: 'Principal',
+            icono: 'mdi mdi-gauge',
+            submenu: [
+                { titulo: 'Dashboard', url: '/dashboard' },
+                { titulo: 'ProgressBar', url: '/progress' },
+                { titulo: 'Gráficas', url: '/graficas1' },
+                { titulo: 'Promesas', url: '/promesas' },
+                { titulo: 'Rxjs', url: '/Rxjs' }
+            ]
+        },
+        {
+            titulo: 'Mantenimientos',
+            icono: 'mdi mdi-folder-lock-open',
+            submenu: [
+                // { titulo: 'Usuarios', url: '/usuarios' },
+                { titulo: 'Hospitales', url: '/hospitales' },
+                { titulo: 'Medicos', url: '/medicos' }
+            ]
+        }
+    ];
+    if (ROLE === 'ADMIN_ROLE')
+        menu[1].submenu.unshift({ titulo: 'Usuarios', url: '/usuarios' });
+    return menu;
 }
