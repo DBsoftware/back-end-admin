@@ -8,9 +8,48 @@ const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(conf.CLIENT_ID);
 
 // =============================
-// autenticacion de google
+// autenticacion de normal
 // =============================
 
+exports.loginCtrler = (req, res) => {
+    U.findOne({ email: req.body.email }, (err, uDB) => {
+        if (err)
+            aux.errorResp(res, err, 500);
+        (!uDB) ?
+        aux.errorResp(res, err, 404, "usuario no encontrado"):
+            ((!bcrypt.compareSync(req.body.password, uDB.password)) ?
+                aux.errorResp(res, err, 404, "password incorrecto") :
+                tokenStuff(res, uDB, false));
+    });
+};
+
+// =============================
+// autenticacion de google
+// =============================
+exports.googleCtrler = async(req, res) => {
+    let gUser = await verify(req.body.token)
+        .catch(err => aux.errorResp(res, err, 401, "token invalido"));
+
+    U.findOne({ email: gUser.email }, (err, oDB) => {
+        err ? aux.errorResp(res, err, 500, "token invalido") :
+            (oDB ? (!oDB.google ? aux.errorResp(res, {}, 400, "Debe usar auth normal") :
+                    tokenStuff(res, oDB, false)) :
+                newGUser(res, gUser));
+    });
+}
+
+// =============================
+// renovacion de token
+// =============================
+
+exports.renewToken = (req, res) => {
+    tokenStuff(res, req.authUser, true);
+}
+
+
+// =============================
+// funciones auxiliares de login
+// =============================
 async function verify(token) {
     const ticket = await client.verifyIdToken({
         idToken: token,
@@ -29,34 +68,12 @@ async function verify(token) {
     };
 }
 
-tokenStuff = function(res, u) {
-    u.token = jwt.sign({ usuario: u }, conf.SEED, { expiresIn: 4500 });
-    aux.rightLoginRespond(res, u, obtenerMenu(u.role));
+tokenStuff = function(res, u, opt) {
+    var token = jwt.sign({ usuario: u }, conf.SEED, { expiresIn: 14500 });
+    (opt) ? aux.renewTokenRespond(res, token):
+        aux.rightLoginRespond(res, u, token, obtenerMenu(u.role));
 }
 
-exports.loginCtrler = (req, res) => {
-    U.findOne({ email: req.body.email }, (err, uDB) => {
-        if (err)
-            aux.errorResp(res, err, 500);
-        (!uDB) ?
-        aux.errorResp(res, err, 404, "usuario no encontrado"):
-            ((!bcrypt.compareSync(req.body.password, uDB.password)) ?
-                aux.errorResp(res, err, 404, "password incorrecto") :
-                tokenStuff(res, uDB));
-    });
-};
-
-exports.googleCtrler = async(req, res) => {
-    let gUser = await verify(req.body.token)
-        .catch(err => aux.errorResp(res, err, 401, "token invalido"));
-
-    U.findOne({ email: gUser.email }, (err, oDB) => {
-        err ? aux.errorResp(res, err, 500, "token invalido") :
-            (oDB ? (!oDB.google ? aux.errorResp(res, {}, 400, "Debe usar auth normal") :
-                    tokenStuff(res, oDB)) :
-                newGUser(res, gUser));
-    });
-}
 
 newGUser = (res, gUser) => {
     gUser.password = ":)"

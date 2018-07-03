@@ -1,61 +1,60 @@
-var hp = require('../models/hospital');
-var bcrypt = require('bcryptjs');
+var model = require('../models/producto');
 var aux = require('./utils');
 // ======================
 // TODOS LOS mdS====
 // ======================
-exports.list_all_hps = (req, res) => {
+exports.list_all = (req, res) => {
     let desde = Number(req.query.desde) || 0;
     let limite = Number(req.query.limite) || 0;
-    hp.find({})
+    model.find({})
         .populate('usuario', 'nombre email')
         .skip(desde)
         .limit(limite)
-        .exec((err, hpDb) => err ?
+        .exec((err, document) => err ?
             aux.errorResp(res, err) :
-            aux.pagination(res, hpDb, hp));
+            aux.pagination(res, document, model));
 };
 // ======================
 // OBTENER hp=======
 // ======================
-exports.get_hpByID = (req, res) => {
-    hp.findById(req.params.id)
+exports.get_ByID = (req, res) => {
+    model.findById(req.params.id)
         .populate('usuario', 'nombre img email')
         .exec(
-            (err, hpDb) => err ?
+            (err, document) => err ?
             aux.errorResp(res, err) :
-            aux.validRespond(res, hpDb)
+            aux.validRespond(res, document)
         );
 };
 //  ======================
 //  CREAR hp=========
 //  ======================
-exports.create_hp = (req, res) => {
+exports.create = (req, res) => {
         req.body.usuario = req.authUser._id;
-        new hp(req.body).save(
-            (err, hpDb) => err ?
+        new model(req.body).save(
+            (err, document) => err ?
             aux.errorResp(res, err) :
-            aux.validRespond(res, hpDb)
+            aux.validRespond(res, document)
         );
     }
     // ======================
     // ACTUALIZAR hp====
     // ======================
-exports.update_hp = (req, res) => {
-        hp.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true },
-            (err, hpDb) => err ?
+exports.update = (req, res) => {
+        model.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true },
+            (err, document) => err ?
             aux.errorResp(res, err) :
-            aux.validRespond(res, hpDb)
+            aux.validRespond(res, document)
         )
     }
     // ======================
     // BORRAR hp========
     // ======================
-exports.delete_hp = (req, res) => {
-    hp.findByIdAndRemove(req.params.id,
-        (err, hpDb) => {
+exports.delete = (req, res) => {
+    model.findByIdAndRemove(req.params.id,
+        (err, document) => {
             err ?
                 aux.errorResp(res, err) :
-                aux.validRespond(res, hpDb);
+                aux.validRespond(res, document);
         })
 }

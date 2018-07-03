@@ -1,7 +1,7 @@
 var exp = require('express');
 var upd = require('express-fileupload');
-var m = require('../models/medico');
-var h = require('../models/hospital');
+var b = require('../models/blog');
+var p = require('../models/producto');
 var u = require('../models/usuario');
 var aux = require('../controllers/utils');
 var fs = require('fs');
@@ -11,7 +11,7 @@ var app = exp();
 app.use(upd());
 app.put('/:tipo/:id', (req, res) => {
     // req.params.tipo y req.params.id
-    if (['medicos', 'usuarios', 'hospitales'].indexOf(req.params.tipo) < 0)
+    if (['blogs', 'usuarios', 'productos'].indexOf(req.params.tipo) < 0)
         aux.errorResp(res, { err: { message: 'Tipo equivocadp' } }, 400, 'tipo seleccionado erroneo');
     else if (!req.files)
         aux.errorResp(res, { err: { message: 'No selecciono nada' } }, 400, 'Debe seleccionar una imagen');
@@ -49,8 +49,8 @@ subirPorTipo = (tipo, id, name, res) => {
                 });
             });
             break;
-        case 'medicos':
-            m.findById(id, (err, oDB) => {
+        case 'blogs':
+            b.findById(id, (err, oDB) => {
                 if (err) aux.errorResp(res, { err: { message: 'Error' } }, 500, 'erro en base de datos');
                 if (!oDB) aux.errorResp(res, { err: { message: 'Error' } }, 400, 'Registro no encontrado');
                 var oldPath = `./uploads/${tipo}/${oDB.img}`;
@@ -61,8 +61,8 @@ subirPorTipo = (tipo, id, name, res) => {
                 });
             });
             break;
-        case 'hospitales':
-            h.findById(id, (err, oDB) => {
+        case 'productos':
+            p.findById(id, (err, oDB) => {
                 if (err) aux.errorResp(res, { err: { message: 'Error' } }, 500, 'erro en base de datos');
                 if (!oDB) aux.errorResp(res, { err: { message: 'Error' } }, 400, 'Registro no encontrado');
                 var oldPath = `./uploads/${tipo}/${oDB.img}`;

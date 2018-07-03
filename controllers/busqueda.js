@@ -1,6 +1,6 @@
 var aux = require('./utils');
-var m = require('../models/medico');
-var h = require('../models/hospital');
+var b = require('../models/blog');
+var p = require('../models/producto');
 var u = require('../models/usuario');
 
 
@@ -11,16 +11,16 @@ var u = require('../models/usuario');
 exports.search_specific = (req, res) => {
     var regex = new RegExp(req.params.key, 'i');
     switch (req.params.colecction) {
-        case 'medicos':
-            buscarMedicos(regex)
+        case 'blogs':
+            buscarblogs(regex)
                 .then(r => aux.validRespond(res, r));
             break;
         case 'usuarios':
             buscarUsuarios(regex)
                 .then(r => aux.validRespond(res, r));
             break;
-        case 'hospitales':
-            buscarHospitales(regex)
+        case 'productos':
+            buscarproductos(regex)
                 .then(r => aux.validRespond(res, r));
             break;
         default:
@@ -34,33 +34,33 @@ exports.search_specific = (req, res) => {
 // ==========================
 exports.search_all = (req, res) => {
     var regex = new RegExp(req.params.key, 'i');
-    Promise.all([buscarHospitales(regex),
-            buscarMedicos(regex),
+    Promise.all([
+            buscarproductos(regex),
+            buscarblogs(regex),
             buscarUsuarios(regex)
         ])
         .then(r => aux.validRespond(res, r));
 };
 
-buscarHospitales = (param) => {
+buscarproductos = (param) => {
     return new Promise((resolve, reject) => {
-        h.find({ 'nombre': param }, 'nombre img usuario')
+        p.find({ 'nombre': param }, 'nombre img desc precio usuario')
             .populate('usuario', 'nombre email')
-            .exec((err, objR) => {
+            .exec((err, documents) => {
                 (err) ?
-                reject('Error al buscar hospitales', err):
-                    resolve(objR);
+                reject('Error al buscar productos', err):
+                    resolve(documents);
             });
     });
 }
-buscarMedicos = (param) => {
+buscarblogs = (param) => {
     return new Promise((resolve, reject) => {
-        m.find({ 'nombre': param }, 'nombre img usuario hospital')
+        b.find({ 'titulo': param }, 'titulo img autor contenido')
             .populate('usuario', 'nombre email')
-            .populate('hospital', 'nombre')
-            .exec((err, objR) => {
+            .exec((err, documents) => {
                 (err) ?
-                reject('Error al buscar medicos', err):
-                    resolve(objR);
+                reject('Error al buscar blogs', err):
+                    resolve(documents);
             });
     });
 }
@@ -68,10 +68,10 @@ buscarUsuarios = (param) => {
     return new Promise((resolve, reject) => {
         u.find({}, 'nombre email role img _id')
             .or([{ 'nombre': param }, { 'email': param }])
-            .exec((err, objR) => {
+            .exec((err, documents) => {
                 (err) ?
-                reject('Error al buscar medicos', err):
-                    resolve(objR);
+                reject('Error al buscar blogs', err):
+                    resolve(documents);
             })
 
     })
