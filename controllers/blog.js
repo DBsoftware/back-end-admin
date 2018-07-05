@@ -1,4 +1,4 @@
-var model = require('../models/producto');
+var model = require('../models/blog');
 var aux = require('./utils');
 // ======================
 // TODOS LOS mdS====
@@ -7,7 +7,7 @@ exports.list_all = (req, res) => {
     let desde = Number(req.query.desde) || 0;
     let limite = Number(req.query.limite) || 0;
     model.find({})
-        .populate('usuario', 'nombre email')
+        .populate('autor', 'nombre email')
         .skip(desde)
         .limit(limite)
         .exec((err, document) => err ?
@@ -19,7 +19,7 @@ exports.list_all = (req, res) => {
 // ======================
 exports.get_ByID = (req, res) => {
     model.findById(req.params.id)
-        .populate('usuario', 'nombre img email')
+        .populate('autor', 'nombre img email')
         .exec(
             (err, document) => err ?
             aux.errorResp(res, err) :
@@ -30,7 +30,7 @@ exports.get_ByID = (req, res) => {
 //  CREAR hp=========
 //  ======================
 exports.create = (req, res) => {
-        req.body.usuario = req.authUser._id;
+        req.body.autor = req.authUser._id;
         new model(req.body).save(
             (err, document) => err ?
             aux.errorResp(res, err) :

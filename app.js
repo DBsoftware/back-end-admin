@@ -2,23 +2,23 @@
 var exp = require('express');
 var mgse = require('mongoose');
 var bdp = require('body-parser');
-var serveIndex = require('serve-index')
+var serveIndex = require('serve-index');
 var cors = require('cors');
 
 var app = exp();
 
-app.use(cors())
-    // body parser section
+app.use(cors());
+// body parser section
 app.use(bdp.urlencoded({ extended: false }));
 app.use(bdp.json());
 // inicializar variables
 
 // server index config
 var serveIndex = require('serve-index');
-app.use(exp.static(__dirname + '/'))
+app.use(exp.static(__dirname + '/'));
 app.use('/uploads', serveIndex(__dirname + '/uploads'));
 
-mgse.connection.openUri('mongodb://localhost:27017/HospitalDB',
+mgse.connection.openUri('mongodb://localhost:27017/modeloDB',
     (err, res) => {
         if (err) {
             throw err;

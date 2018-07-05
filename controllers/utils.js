@@ -58,7 +58,7 @@ modifyPass = (aux) => {
     return aux;
 };
 
-exports.pagination = (r, aux, model) => {
+exports.pagination = (r, aux, model, front = null) => {
     if (!aux) {
         return r.status(400).json({
             ok: false,
@@ -72,12 +72,20 @@ exports.pagination = (r, aux, model) => {
                 aux = modifyPass(aux);
             }
         }
-        model.count({}, (err, c) => {
-            r.json({
-                ok: true,
-                total: c,
-                aux
+        front === null ?
+            model.count({}, (err, c) => {
+                r.json({
+                    ok: true,
+                    total: c,
+                    aux
+                });
+            }) :
+            model.count(front, (err, c) => {
+                r.json({
+                    ok: true,
+                    total: c,
+                    aux
+                });
             });
-        })
     }
 }

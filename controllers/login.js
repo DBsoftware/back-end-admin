@@ -88,11 +88,11 @@ obtenerMenu = (ROLE) => {
             titulo: 'Principal',
             icono: 'mdi mdi-gauge',
             submenu: [
-                { titulo: 'Dashboard', url: '/dashboard' },
+                // { titulo: 'Dashboard', url: '/dashboard' },
                 { titulo: 'ProgressBar', url: '/progress' },
-                { titulo: 'Gráficas', url: '/graficas1' },
-                { titulo: 'Promesas', url: '/promesas' },
-                { titulo: 'Rxjs', url: '/Rxjs' }
+                { titulo: 'Gráficas', url: '/graficas1' }
+                // { titulo: 'Promesas', url: '/promesas' },
+                // { titulo: 'Rxjs', url: '/Rxjs' }
             ]
         },
         {
@@ -100,8 +100,8 @@ obtenerMenu = (ROLE) => {
             icono: 'mdi mdi-folder-lock-open',
             submenu: [
                 // { titulo: 'Usuarios', url: '/usuarios' },
-                { titulo: 'Hospitales', url: '/hospitales' },
-                { titulo: 'Medicos', url: '/medicos' }
+                { titulo: 'Productos', url: '/productos' },
+                { titulo: 'Blogs', url: '/blogs' }
             ]
         }
     ];
