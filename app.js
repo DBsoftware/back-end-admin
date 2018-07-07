@@ -30,6 +30,6 @@ mgse.connection.openUri(process.env.DB_url,
 app.use(require('./routes/index'));
 
 //escuchar peticiones
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
     console.log('express server: \x1b[32m%s\x1b', 'online');
 });

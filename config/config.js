@@ -4,6 +4,7 @@ module.exports.SEED = 'seed';
 
 module.exports.CLIENT_ID = '206058962974-1ctnbh90anmsvt9mrg7dht1c5p6eajuu.apps.googleusercontent.com';
 // Entorno
+process.env.PORT = process.env.PORT || 3000;
 process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
 // MongoDB
 process.env.DB_url = (process.env.NODE_ENV === 'dev') ? 'mongodb://localhost:27017/modeloDB' : process.env.MONGO_URI;
