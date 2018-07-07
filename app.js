@@ -18,7 +18,7 @@ var serveIndex = require('serve-index');
 app.use(exp.static(__dirname + '/'));
 app.use('/uploads', serveIndex(__dirname + '/uploads'));
 
-mgse.connection.openUri('mongodb://localhost:27017/modeloDB',
+mgse.connection.openUri(process.env.DB_url,
     (err, res) => {
         if (err) {
             throw err;
