@@ -1,4 +1,5 @@
 // los requires
+require('./config/config');
 var exp = require('express');
 var mgse = require('mongoose');
 var bdp = require('body-parser');
@@ -17,7 +18,6 @@ app.use(bdp.json());
 var serveIndex = require('serve-index');
 app.use(exp.static(__dirname + '/'));
 app.use('/uploads', serveIndex(__dirname + '/uploads'));
-
 mgse.connection.openUri(process.env.DB_url,
     (err, res) => {
         if (err) {
